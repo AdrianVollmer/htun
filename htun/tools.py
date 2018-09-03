@@ -2,12 +2,13 @@ from htun.args import args
 import subprocess
 import random
 import datetime
-try:
-    import hexdump
-except ModuleNotFoundError:
-    print("Debug mode impossible without the python module 'hexdump'. "
-          "Install it first.")
-    args.debug = False
+if args.debug:
+    try:
+        import hexdump
+    except ImportError:
+        print("Debug mode impossible without the python module 'hexdump'. "
+              "Install it first.")
+        args.debug = False
 
 
 RUNNING = True
