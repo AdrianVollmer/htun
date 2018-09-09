@@ -1,2 +1,3 @@
 python_pytun==2.2.1
 hexdump==3.3
+socks

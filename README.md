@@ -140,6 +140,24 @@ With a TCP tunnel it's at least around 3% of the original speed:
     100  713k  100  713k    0     0  37640      0  0:00:19  0:00:19 --:--:-- 41086
 
 
+1M:
+
+No tunnel:
+                                               |       <-      | |       ->      | |     Total     |    Relative    |   Duration   |
+                                               | Frames  Bytes | | Frames  Bytes | | Frames  Bytes |      Start     |              |
+192.168.122.1        <-> 192.168.122.55           113   1031672     114      7628     227   1039300     0.000000000         0.0125
+
+HTTP tunnel:
+                                               |       <-      | |       ->      | |     Total     |    Relative    |   Duration   |
+                                               | Frames  Bytes | | Frames  Bytes | | Frames  Bytes |      Start     |              |
+10.13.37.1           <-> 10.13.37.2               712   1415238     712     40228    1424   1455466     0.000000000         1.6833
+
+
+TCP tunnel:
+                                               |       <-      | |       ->      | |     Total     |    Relative    |   Duration   |
+                                               | Frames  Bytes | | Frames  Bytes | | Frames  Bytes |      Start     |              |
+10.13.37.1           <-> 10.13.37.2               712   1424743     713     40660    1425   1465403     0.000000000         0.9713
+
 
 To do
 -----
