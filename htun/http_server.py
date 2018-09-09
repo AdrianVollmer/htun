@@ -1,6 +1,7 @@
 import threading
 import socket
 import select
+import os
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 #  import SocketServer
@@ -14,11 +15,13 @@ SOCK_FILE_CLIENT = temp_filename("/tmp/htun_c_")
 # data from the htun interface is sent to the server socket
 server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
 server_socket.bind(SOCK_FILE_SERVER)
+os.chmod(SOCK_FILE_SERVER, 0o700)
 
 # client socket is connected to the server socket. data from the client socket
 # is sent to the remote instance via reverse http requests
 client_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
 client_socket.bind(SOCK_FILE_CLIENT)
+os.chmod(SOCK_FILE_CLIENT, 0o700)
 
 # connect the sockets
 client_socket.connect(SOCK_FILE_SERVER)

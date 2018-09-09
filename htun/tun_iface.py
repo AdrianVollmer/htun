@@ -91,10 +91,6 @@ class TunnelServer(object):
                 else:
                     print_stats(self.count_in, self.count_out, self.count_err)
             except (select.error, socket.error, pytun.Error) as e:
-                #  if e.errno == errno.EINTR:
-                #      continue
-                #  if args.debug:
                 print(str(e))
                 time.sleep(1)
-                #  stop_running()
         self._sock.close()
