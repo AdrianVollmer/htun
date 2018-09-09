@@ -1,4 +1,2 @@
 python_pytun==2.2.1
 hexdump==3.3
-urllib3==1.22
-pytun==1.0.1
