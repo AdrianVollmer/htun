@@ -26,9 +26,9 @@ parser.add_argument('--route-subnet', '-n', type=str, dest='rsubnet',
 parser.add_argument('--proxy', '-P', dest='proxy',
                     help='proxy URI (<proto>://<host>:<port>)')
 parser.add_argument('--username', '-u', dest='username',
-                    help='username for proxy authentication')
+                    help='username for HTTP proxy basic authentication')
 parser.add_argument('--password', '-W', dest='password',
-                    help='password for proxy authentication')
+                    help='password for HTTP proxy basic authentication')
 # TODO
 #  parser.add_argument('--creds-file', '-A', dest='creds_file',
 #                      help='path to file containing credentials')
