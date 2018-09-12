@@ -21,7 +21,8 @@ class TunnelServer(object):
         self._tun.mtu = args.tmtu
         self._tun.up()
         if args.rsubnet:
-            add_route(args.rsubnet, args.saddr, self._tun.name)
+            add_route(args.rsubnet, args.saddr, self._tun.name,
+                      args.uri["peer_ip"])
         self._sock = sock
         self._create_socket = create_socket
         self.r = [self._tun, self._sock]

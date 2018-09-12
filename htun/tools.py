@@ -29,7 +29,21 @@ def dump(comment, data):
         hexdump.hexdump(data)
 
 
-def add_route(subnet, via_ip, devname):
+def add_route(subnet, via_ip, devname, peer_ip):
+    route = subprocess.check_output([
+        'ip',
+        'route',
+        'get',
+        peer_ip,
+    ])
+    route = route.splitlines()[0].decode()
+
+    subprocess.check_call([
+        'ip',
+        'route',
+        'add',
+    ] + route.strip().split(' '))
+
     subprocess.check_call([
         'ip',
         'route',

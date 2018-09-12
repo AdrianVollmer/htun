@@ -1,4 +1,5 @@
 import argparse
+import socket
 
 
 parser = argparse.ArgumentParser(
@@ -53,3 +54,25 @@ args = parser.parse_args()
 
 if not args.server:
     args.server = 'http'
+
+if args.rsubnet and not args.uri:
+        print("Warning: Specifying a subnet in server mode does nothing")
+
+if args.uri:
+    proto, rest = args.uri.split('://')
+    if ':' in rest:
+        host, port = rest.split(':')
+        port = int(port)
+    else:
+        host = rest
+        port = 80
+    ip = socket.gethostbyname(host)
+
+    args.uri = {
+        "uri": args.uri,
+        "proto": proto,
+        "peer_ip": ip,
+        "port": port,
+    }
+
+

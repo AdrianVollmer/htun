@@ -5,7 +5,7 @@ from htun.tun_iface import TunnelServer
 
 if args.uri:
     is_server = False
-    proto, _ = args.uri.split("://")
+    proto = args.uri["proto"]
     if proto == "http":
         from htun.http_client import server_socket
         reconnect = None

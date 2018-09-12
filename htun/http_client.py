@@ -37,7 +37,7 @@ def connect():
                 args.proxy,
                 headers=default_headers
             )
-            http = http_proxy.connection_from_url(args.uri)
+            http = http_proxy.connection_from_url(args.uri["uri"])
         elif proto in ["socks4", "socks5"]:
             http = SOCKSProxyManager(args.proxy)
         else:
@@ -45,7 +45,7 @@ def connect():
                   "'socks[45]://'.")
             exit(1)
     else:
-        http = urllib3.connection_from_url(args.uri)
+        http = urllib3.connection_from_url(args.uri["uri"])
     return http
 
 
@@ -56,12 +56,12 @@ def transmit(data):
     try:
         r = http.urlopen(
             'POST',
-            args.uri,
+            args.uri["uri"],
             body=data,
             assert_same_host=(args.proxy is None),
         )
     except urllib3.exceptions.MaxRetryError as e:
-        print("Could not connect to %s" % args.uri)
+        print("Could not connect to %s" % args.uri["uri"])
         if args.debug:
             print(e)
         exit(1)
@@ -73,11 +73,11 @@ def receive():
     try:
         r = http.urlopen(
             'GET',
-            args.uri,
+            args.uri["uri"],
             assert_same_host=(args.proxy is None),
         )
     except urllib3.exceptions.MaxRetryError as e:
-        print("Could not connect to %s" % args.uri)
+        print("Could not connect to %s" % args.uri["uri"])
         if args.debug:
             print(e)
         exit(1)

@@ -19,16 +19,8 @@ def create_socket():
     else:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    proto, rest = args.uri.split('://')
-    if ':' in rest:
-        host, port = rest.split(':')
-        port = int(port)
-    else:
-        host = rest
-        port = 80
-
     server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    server_socket.connect((host, port))
+    server_socket.connect((args.uri["peer_ip"], args.uri["port"]))
 
     return server_socket
 
