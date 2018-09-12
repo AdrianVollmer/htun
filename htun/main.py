@@ -1,5 +1,5 @@
 from htun.args import args
-from htun.tools import stop_running
+from htun.tools import stop_running, clean_up
 from htun.http_server import run_server
 from htun.tun_iface import TunnelServer
 
@@ -43,3 +43,4 @@ def main():
     except KeyboardInterrupt:
         print("CTRL-c caught, exiting...")
         stop_running()
+    clean_up()

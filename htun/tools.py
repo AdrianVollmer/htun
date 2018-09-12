@@ -12,6 +12,7 @@ if args.debug:
 
 
 RUNNING = True
+ROUTE = None
 
 
 def stop_running():
@@ -37,12 +38,15 @@ def add_route(subnet, via_ip, devname, peer_ip):
         peer_ip,
     ])
     route = route.splitlines()[0].decode()
+    route = route.strip().split(' ')
+    global ROUTE
+    ROUTE = route
 
     subprocess.check_call([
         'ip',
         'route',
         'add',
-    ] + route.strip().split(' '))
+    ] + ROUTE)
 
     subprocess.check_call([
         'ip',
@@ -52,6 +56,16 @@ def add_route(subnet, via_ip, devname, peer_ip):
         'via',
         via_ip,
     ])
+
+
+def clean_up():
+    if ROUTE:
+        subprocess.check_call([
+            'ip',
+            'route',
+            'del',
+        ] + ROUTE)
+
 
 
 def temp_filename(basename):
