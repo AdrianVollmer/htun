@@ -139,8 +139,7 @@ With a TCP tunnel it's at least around 3% of the original speed:
 
     $ curl https://example.com/example.png  > /dev/null
       % Total    % Received % Xferd  Average Speed   Time    Time     Time Current
-                                   Dload  Upload   Total   Spent    Left
-                                   Speed
+                                     Dload  Upload   Total   Spent    Left Speed
     100  713k  100  713k    0     0  37640      0  0:00:19  0:00:19 --:--:-- 41086
 
 
