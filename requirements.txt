@@ -1,3 +1,5 @@
+urllib3==1.24
 python_pytun==2.2.1
 hexdump==3.3
-socks
+pytun==1.0.1
+SocksiPy_branch==1.01

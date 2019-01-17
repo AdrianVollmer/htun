@@ -20,6 +20,20 @@ Since python-pytun is required, which is a non-portable module, this will
 only run on Linux.
 
 
+Requirements
+------------
+
+To run htun, you need Python3 and the following modules:
+* urllib3==1.24
+* python_pytun==2.2.1
+* pytun==1.0.1
+* SocksiPy_branch==1.01
+
+Recommended:
+
+* hexdump==3.3
+
+
 Usage
 -----
 
