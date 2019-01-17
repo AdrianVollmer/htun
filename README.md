@@ -139,14 +139,14 @@ Example downloading 713k bytes without the tunnel:
 
 	$ curl https://example.com/example.png  > /dev/null
 	  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-									 Dload  Upload   Total   Spent    Left  Speed
+                                     Dload  Upload   Total   Spent    Left  Speed
 	100  713k  100  713k    0     0  2680k      0 --:--:-- --:--:-- --:--:-- 2680k
 
 Downloading the same file with an HTTP tunnel:
 
 	$ curl https://example.com/example.png  > /dev/null
 	  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-									 Dload  Upload   Total   Spent    Left  Speed
+                                     Dload  Upload   Total   Spent    Left  Speed
     100  713k  100  713k    0     0  12177      0  0:00:59  0:00:59 --:--:-- 16590
 
 With a TCP tunnel it's at least around 3% of the original speed:
