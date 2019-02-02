@@ -20,7 +20,7 @@ parser.add_argument('--tun-mtu', type=int, default=1500, dest='tmtu',
                     help='tunnel MTU')
 parser.add_argument('--tun-timeout', type=int, default=1, dest='timeout',
                     help='r/w timeout in seconds')
-parser.add_argument('--route-subnet', '-n', type=str, dest='rsubnet',
+parser.add_argument('--route-subnet', '-n', type=str, dest='rsubnet', default='default',
                     help='subnet to be routed via tunnel')
 
 parser.add_argument('--proxy', '-P', dest='proxy',
