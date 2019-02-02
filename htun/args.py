@@ -1,8 +1,9 @@
 import argparse
+import socket
 
 
 parser = argparse.ArgumentParser(
-    description="htun is a TCP and HTTP tunnel on layer 2 "
+    description="htun tunnels IP traffic transparently over HTTP or TCP "
     "(author: Adrian Vollmer)",
     formatter_class=argparse.ArgumentDefaultsHelpFormatter
 )
@@ -44,7 +45,7 @@ parser.add_argument('--bind-ip', '-b', dest='bindip',
                     help='bind IP address of the server component')
 
 serverclient = parser.add_mutually_exclusive_group(required=True)
-serverclient.add_argument('--server', default='http',
+serverclient.add_argument('--server', default='http', nargs='?',
                           dest='server', type=str, choices=["http", "tcp"],
                           help='server protocol')
 serverclient.add_argument('--uri', dest='uri',
@@ -52,3 +53,28 @@ serverclient.add_argument('--uri', dest='uri',
                           help='remote URI (<proto>://<host>[:<port>])')
 
 args = parser.parse_args()
+
+if not args.server:
+    args.server = 'http'
+
+if args.rsubnet and not args.uri:
+        print("Warning: Specifying a subnet in server mode does nothing")
+
+if args.uri:
+    proto, rest = args.uri.split('://')
+    if ':' in rest:
+        host, port = rest.split(':')
+        port = int(port)
+    else:
+        host = rest
+        port = 80
+    ip = socket.gethostbyname(host)
+
+    args.uri = {
+        "uri": args.uri,
+        "proto": proto,
+        "peer_ip": ip,
+        "port": port,
+    }
+
+

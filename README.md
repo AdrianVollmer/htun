@@ -1,21 +1,37 @@
 htun
 ====
 
-htun is a layer 2 tunnel over HTTP or TCP. It was developed with situations
-in mind where traffic to the internet is restricted. For instance, some
-networks don't allow traffic to the internet at all and require you to go
-through an HTTP proxy. htun enables you to get full internet access in those
-situations (all ports, all protocols). It also supports using a SOCKS proxy.
+htun is a transparent tunnel for transporting IP traffic over HTTP or TCP.
+
+It was developed with situations in mind where traffic to the internet is
+restricted. For instance, some networks don't allow traffic to the internet
+at all and require you to go through an HTTP proxy. htun enables you to get
+full internet access in those situations (all ports, all protocols). It also
+supports using a SOCKS proxy.
 
 Obviously, performance takes a huge it. So it is meant for some light
 browsing or downloading small files sporadically. Expect transfer rates to
-be cut by a factor of 100.
+be cut by a factor of up to 100.
 
 Also, it is not encrypted by default. It is recommended to put another
 tunnel on top, such as Wireguard.
 
 Since python-pytun is required, which is a non-portable module, this will
 only run on Linux.
+
+
+Requirements
+------------
+
+To run htun, you need Python3 and the following modules:
+* urllib3==1.24
+* python_pytun==2.2.1
+* pytun==1.0.1
+* SocksiPy_branch==1.01
+
+Recommended:
+
+* hexdump==3.3
 
 
 Usage
@@ -39,9 +55,10 @@ For all options, run `./htun.py --help`:
                    [--tun-netmask TMASK] [--tun-mtu TMTU] [--tun-timeout TIMEOUT]
                    [--route-subnet RSUBNET] [--proxy PROXY] [--username USERNAME]
                    [--password PASSWORD] [--listen-port LPORT] [--bind-ip BINDIP]
-                   (--server [SERVER] | --uri URI)
+                   (--server [{http,tcp}] | --uri URI)
 
-    htun is a TCP and HTTP tunnel on layer 2 (author: Adrian Vollmer)
+    htun tunnels IP traffic transparently over HTTP or TCP (author: Adrian
+    Vollmer)
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -60,9 +77,11 @@ For all options, run `./htun.py --help`:
       --proxy PROXY, -P PROXY
                             proxy URI (<proto>://<host>:<port>) (default: None)
       --username USERNAME, -u USERNAME
-                            username for proxy authentication (default: None)
+                            username for HTTP proxy basic authentication (default:
+                            None)
       --password PASSWORD, -W PASSWORD
-                            password for proxy authentication (default: None)
+                            password for HTTP proxy basic authentication (default:
+                            None)
       --listen-port LPORT, -p LPORT
                             listen port of the server component (default: 80)
       --bind-ip BINDIP, -b BINDIP
@@ -121,22 +140,21 @@ Example downloading 713k bytes without the tunnel:
 
 	$ curl https://example.com/example.png  > /dev/null
 	  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-									 Dload  Upload   Total   Spent    Left  Speed
+                                     Dload  Upload   Total   Spent    Left  Speed
 	100  713k  100  713k    0     0  2680k      0 --:--:-- --:--:-- --:--:-- 2680k
 
 Downloading the same file with an HTTP tunnel:
 
 	$ curl https://example.com/example.png  > /dev/null
 	  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-									 Dload  Upload   Total   Spent    Left  Speed
+                                     Dload  Upload   Total   Spent    Left  Speed
     100  713k  100  713k    0     0  12177      0  0:00:59  0:00:59 --:--:-- 16590
 
 With a TCP tunnel it's at least around 3% of the original speed:
 
-    $ curl https://i.imgur.com/8jDGnXB.png  > /dev/null
+    $ curl https://example.com/example.png  > /dev/null
       % Total    % Received % Xferd  Average Speed   Time    Time     Time Current
-                                   Dload  Upload   Total   Spent    Left
-                                   Speed
+                                     Dload  Upload   Total   Spent    Left Speed
     100  713k  100  713k    0     0  37640      0  0:00:19  0:00:19 --:--:-- 41086
 
 
@@ -171,8 +189,8 @@ Disclaimer
 
 Keep in mind that the administrator of the network most likely did not want
 you to bypass the restriction that were set up. The restriction is probably
-there for a reason, you need to respect that. Using this tool may violate
-terms and conditions or company rules and possibly even get you in legal
+there for a reason and you need to respect that. Using this tool may violate
+terms and conditions or company rules and may possibly even get you in legal
 trouble and/or fired from your job.
 
 Use this only if you know that you have permission to use it by everyone
