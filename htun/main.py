@@ -1,5 +1,5 @@
 from htun.args import args
-from htun.tools import stop_running
+from htun.tools import stop_running, create_iptables_rules, delete_ip_tables_rules
 from htun.http_server import run_server
 from htun.tun_iface import TunnelServer
 
@@ -34,6 +34,7 @@ else:
 def main():
     if is_server:
         server = TunnelServer(server_socket, args.saddr, args.caddr, reconnect)
+        create_iptables_rules()
     else:
         server = TunnelServer(server_socket, args.caddr, args.saddr,
                               reconnect)
@@ -42,4 +43,5 @@ def main():
         server.run()
     except KeyboardInterrupt:
         print("CTRL-c caught, exiting...")
+        delete_ip_tables_rules()
         stop_running()

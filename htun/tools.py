@@ -50,3 +50,26 @@ def print_stats(count_in, count_out, count_err):
         msg = "Bytes received: %d   Bytes sent: %d   Packets dropped: %d"\
                 % (count_in, count_out, count_err)
         print('\r' + msg, end='')
+
+
+def create_iptables_rules():
+    global old_ipforward
+    with open('/proc/sys/net/ipv4/ip_forward', 'r') as f:
+        old_ipforward = f.read()
+    with open('/proc/sys/net/ipv4/ip_forward', 'w') as f:
+        f.write('1')
+    subprocess.check_call(
+        'iptables -t nat -A POSTROUTING -o'.split() +
+        [args.ifaceout] +
+        '-j MASQUERADE'.split()
+    )
+
+
+def delete_ip_tables_rules():
+    with open('/proc/sys/net/ipv4/ip_forward', 'w') as f:
+        f.write(old_ipforward)
+    subprocess.check_call(
+        'iptables -t nat -D POSTROUTING -o'.split() +
+        [args.ifaceout] +
+        '-j MASQUERADE'.split()
+    )
