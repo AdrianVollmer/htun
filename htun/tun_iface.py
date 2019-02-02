@@ -36,13 +36,13 @@ class TunnelServer(object):
             self.w = []
             self.to_tun = self.to_sock = b''
 
-    def exchange_messages(self):
+    def forward_data(self):
         self.r, self.w, _ = select.select(self.r, self.w, [])
 
         if self._tun in self.r:
             data = self._tun.read(self._tun.mtu)
             self.to_sock += data
-            dump("from_sock <<<", data)
+            dump("from_tun <<<", data)
         if self._sock in self.r:
             data = self._sock.recv(65535)
             if data:
@@ -56,8 +56,8 @@ class TunnelServer(object):
             try:
                 write_len = self._tun.write(self.to_tun)
                 self.count_in += write_len
-                dump("to_tun <<<", self.to_tun[:write_len])
-                self.to_tun = self.to_tun[write_len:]
+                dump("to_tun <<<", self.to_tun)
+                self.to_tun = b""
             except OSError as e:
                 if e.errno == errno.EINVAL:
                     # this is a transmission error. just drop it
@@ -70,7 +70,7 @@ class TunnelServer(object):
             sent_len = self._sock.send(self.to_sock)
             self.count_out += sent_len
             dump("to_sock >>>", self.to_sock)
-            self.to_sock = self.to_sock[sent_len:]
+            self.to_sock = b""
 
         self.r = [self._tun, self._sock]
         self.w = []
@@ -87,7 +87,7 @@ class TunnelServer(object):
         last_print_time = time.time()
         while is_running():
             try:
-                if not self.exchange_messages():
+                if not self.forward_data():
                     self.reconnect()
                 else:
                     print_time = time.time()
