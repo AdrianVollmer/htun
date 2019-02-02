@@ -20,7 +20,7 @@ class TunnelServer(object):
         self._tun.netmask = args.tmask
         self._tun.mtu = args.tmtu
         self._tun.up()
-        if args.rsubnet:
+        if args.rsubnet and args.uri:
             add_route(args.rsubnet, args.saddr, self._tun.name)
         self._sock = sock
         self._create_socket = create_socket
@@ -84,12 +84,17 @@ class TunnelServer(object):
 
     def run(self):
         self.count_in = self.count_out = self.count_err = 0
+        last_print_time = time.time()
         while is_running():
             try:
                 if not self.exchange_messages():
                     self.reconnect()
                 else:
-                    print_stats(self.count_in, self.count_out, self.count_err)
+                    print_time = time.time()
+                    # only print every 1s for efficiency
+                    if print_time - last_print_time > 1:
+                        print_stats(self.count_in, self.count_out, self.count_err)
+                        last_print_time = print_time
             except (select.error, socket.error, pytun.Error) as e:
                 print(str(e))
                 time.sleep(1)
