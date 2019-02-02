@@ -37,7 +37,7 @@ class TunnelServer(object):
             self.to_tun = self.to_sock = b''
 
     def exchange_messages(self):
-        self.r, self.w, _ = select.select(self.r, self.w, [], 0)
+        self.r, self.w, _ = select.select(self.r, self.w, [])
 
         if self._tun in self.r:
             data = self._tun.read(self._tun.mtu)
