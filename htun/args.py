@@ -17,7 +17,7 @@ parser.add_argument('--server-addr', '-s', dest='saddr', default='10.13.37.2',
                     help='tunnel destination address')
 parser.add_argument('--tun-netmask', '-m', default='255.255.255.0',
                     dest='tmask', help='tunnel netmask')
-parser.add_argument('--tun-mtu', type=int, default=1500, dest='tmtu',
+parser.add_argument('--tun-mtu', type=int, default=1420, dest='tmtu',
                     help='tunnel MTU')
 parser.add_argument('--tun-timeout', type=int, default=1, dest='timeout',
                     help='r/w timeout in seconds')
