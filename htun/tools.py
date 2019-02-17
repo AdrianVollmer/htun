@@ -6,7 +6,7 @@ if args.debug:
     try:
         import hexdump
     except ImportError:
-        print("Debug mode impossible without the python module 'hexdump'. "
+        logging.error("Debug mode impossible without the python module 'hexdump'. "
               "Install it first.")
         args.debug = False
 
@@ -24,9 +24,7 @@ def is_running():
 
 
 def dump(comment, data):
-    if args.debug:
-        print(comment)
-        hexdump.hexdump(data)
+    logging.debug(comment+hexdump.hexdump(data))
 
 
 def add_route(subnet, via_ip, devname):
