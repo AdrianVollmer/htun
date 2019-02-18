@@ -1,3 +1,4 @@
+import logging
 import select
 import socket
 import pytun
@@ -29,6 +30,7 @@ class TunnelServer(object):
         self.to_tun = self.to_sock = b''
 
     def reconnect(self):
+        logging.debug("Reconnecting...")
         if self._create_socket:
             self._sock.close()
             self._sock = self._create_socket()
@@ -54,7 +56,7 @@ class TunnelServer(object):
                 self.to_tun += data
                 dump("from_sock <<<", data)
             else:
-                print("Connection closed")
+                logging.info("Connection closed")
                 return False
 
         if self._tun in self.w and self.to_tun:
@@ -101,6 +103,6 @@ class TunnelServer(object):
                         print_stats(self.count_in, self.count_out, self.count_err)
                         last_print_time = print_time
             except (select.error, socket.error, pytun.Error) as e:
-                print(str(e))
+                logging.warning(str(e))
                 time.sleep(1)
         self._sock.close()
