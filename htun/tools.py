@@ -30,15 +30,17 @@ def dump(comment, data):
 
 
 def add_route(subnet, via_ip, devname):
-    subprocess.check_call([
-        'ip',
-        'route',
-        'add',
-        subnet,
-        'via',
-        via_ip,
-    ])
-
+    try:
+        subprocess.check_call([
+            'ip',
+            'route',
+            'add',
+            subnet,
+            'via',
+            via_ip,
+        ])
+    except subprocess.CalledProcessError as e:
+        logging.error("Failed to set ip route")
 
 def temp_filename(basename):
     suffix = int(datetime.datetime.now().timestamp()*1000)
