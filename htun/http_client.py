@@ -1,3 +1,4 @@
+import logging
 import urllib3
 import socket
 import select
@@ -41,7 +42,7 @@ def connect():
         elif proto in ["socks4", "socks5"]:
             http = SOCKSProxyManager(args.proxy)
         else:
-            print("Invalid proxy protocol. It must start with 'http://' or "
+            logging.error("Invalid proxy protocol. It must start with 'http://' or "
                   "'socks[45]://'.")
             exit(1)
     else:
@@ -61,9 +62,9 @@ def transmit(data):
             assert_same_host=(args.proxy is None),
         )
     except urllib3.exceptions.MaxRetryError as e:
-        print("Could not connect to %s" % args.uri["uri"])
+        logging.error("Could not connect to %s" % args.uri["uri"])
         if args.debug:
-            print(e)
+            logging.debug(e)
         exit(1)
     dump("transmit >>>", data)
     return r.data
@@ -77,9 +78,9 @@ def receive():
             assert_same_host=(args.proxy is None),
         )
     except urllib3.exceptions.MaxRetryError as e:
-        print("Could not connect to %s" % args.uri["uri"])
+        logging.error("Could not connect to %s" % args.uri["uri"])
         if args.debug:
-            print(e)
+            logging.debug(e)
         exit(1)
     if r.data:
         dump("receive >>>", r.data)

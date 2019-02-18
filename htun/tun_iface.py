@@ -42,7 +42,7 @@ class TunnelServer(object):
         try:
             self.r, self.w, _ = select.select(self.r, self.w, [])
         except ValueError as e:
-            print("Connection reset by peer")
+            logging.info("Connection reset by peer")
             return False
 
 

@@ -1,3 +1,4 @@
+import logging
 from htun.args import args
 from htun.tools import stop_running, create_iptables_rules, delete_ip_tables_rules
 from htun.http_server import run_server
@@ -13,7 +14,7 @@ if args.uri:
         from htun.tcp_client import server_socket, create_socket
         reconnect = create_socket
     else:
-        print("Unknown URI protocol: %s (must be one of tcp or http)" %
+        logging.error("Unknown URI protocol: %s (must be one of tcp or http)" %
               args.server)
         exit(1)
 else:
@@ -26,7 +27,7 @@ else:
         from htun.tcp_server import server_socket, create_socket
         reconnect = create_socket
     else:
-        print("Unknown URI protocol: %s (must be one of tcp or http)" %
+        logging.error("Unknown URI protocol: %s (must be one of tcp or http)" %
               args.server)
         exit(1)
 
@@ -42,6 +43,6 @@ def main():
     try:
         server.run()
     except KeyboardInterrupt:
-        print("CTRL-c caught, exiting...")
+        logging.info("CTRL-c caught, exiting...")
         delete_ip_tables_rules()
         stop_running()
