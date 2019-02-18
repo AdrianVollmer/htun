@@ -37,7 +37,12 @@ class TunnelServer(object):
             self.to_tun = self.to_sock = b''
 
     def forward_data(self):
-        self.r, self.w, _ = select.select(self.r, self.w, [])
+        try:
+            self.r, self.w, _ = select.select(self.r, self.w, [])
+        except ValueError as e:
+            print("Connection reset by peer")
+            return False
+
 
         if self._tun in self.r:
             data = self._tun.read(self._tun.mtu)
