@@ -1,4 +1,5 @@
 from htun.args import args
+import logging
 import subprocess
 import random
 import datetime
@@ -24,7 +25,8 @@ def is_running():
 
 
 def dump(comment, data):
-    logging.debug(comment+hexdump.hexdump(data))
+    if args.debug:
+        logging.debug(comment+hexdump.hexdump(data))
 
 
 def add_route(subnet, via_ip, devname):
