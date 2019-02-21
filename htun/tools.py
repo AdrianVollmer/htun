@@ -7,8 +7,9 @@ if args.debug:
     try:
         import hexdump
     except ImportError:
-        logging.error("Debug mode impossible without the python module 'hexdump'. "
-              "Install it first.")
+        logging.error(
+            "Debug mode impossible without the python module 'hexdump'. "
+            "Install it first.")
         args.debug = False
 
 
@@ -39,8 +40,9 @@ def add_route(subnet, via_ip, devname):
             'via',
             via_ip,
         ])
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         logging.error("Failed to set ip route")
+
 
 def temp_filename(basename):
     suffix = int(datetime.datetime.now().timestamp()*1000)
@@ -60,7 +62,7 @@ def create_iptables_rules():
         with open('/proc/sys/net/ipv4/ip_forward', 'r') as f:
             old_ipforward = f.read()
         with open('/proc/sys/net/ipv4/ip_forward', 'w') as f:
-            f.write('1')
+            f.write('1\n')
         subprocess.check_call(
             'iptables -t nat -A POSTROUTING -o'.split() +
             [args.ifaceout] +

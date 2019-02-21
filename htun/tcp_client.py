@@ -19,7 +19,7 @@ def create_socket():
     else:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    #  server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     server_socket.connect((args.uri["peer_ip"], args.uri["port"]))
 
     return server_socket

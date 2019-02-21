@@ -41,10 +41,9 @@ class TunnelServer(object):
     def forward_data(self):
         try:
             self.r, self.w, _ = select.select(self.r, self.w, [])
-        except ValueError as e:
+        except ValueError:
             logging.info("Connection reset by peer")
             return False
-
 
         if self._tun in self.r:
             data = self._tun.read(self._tun.mtu)
@@ -100,7 +99,9 @@ class TunnelServer(object):
                     print_time = time.time()
                     # only print every 1s for efficiency
                     if print_time - last_print_time > 1:
-                        print_stats(self.count_in, self.count_out, self.count_err)
+                        print_stats(self.count_in,
+                                    self.count_out,
+                                    self.count_err)
                         last_print_time = print_time
             except (select.error, socket.error, pytun.Error) as e:
                 logging.warning(str(e))
