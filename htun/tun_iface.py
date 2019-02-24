@@ -12,6 +12,7 @@ from htun.args import args
 
 class TunnelServer(object):
     def __init__(self, sock, addr, dstaddr, create_socket=None):
+        logging.debug("Initiate Tunnel object")
         self._tun = pytun.TunTapDevice(
             name="htun",
             flags=pytun.IFF_TUN | pytun.IFF_NO_PI
@@ -80,7 +81,7 @@ class TunnelServer(object):
     def select_fds(self):
         try:
             self.r, self.w, _ = select.select(self.r, self.w, [])
-        except ValueError as e:
+        except ValueError:
             logging.info("Connection reset by peer")
             return False
 
@@ -116,7 +117,9 @@ class TunnelServer(object):
                     print_time = time.time()
                     # only print every 1s for efficiency
                     if print_time - last_print_time > 1:
-                        print_stats(self.count_in, self.count_out, self.count_err)
+                        print_stats(self.count_in,
+                                    self.count_out,
+                                    self.count_err)
                         last_print_time = print_time
             except (select.error, socket.error, pytun.Error) as e:
                 logging.warning(str(e))
