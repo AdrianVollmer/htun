@@ -1,8 +1,12 @@
-import logging
 from htun.args import args
-from htun.tools import stop_running, create_iptables_rules, delete_ip_tables_rules
+from htun.tools import stop_running, create_iptables_rules, \
+        delete_ip_tables_rules
 from htun.http_server import run_server
 from htun.tun_iface import TunnelServer
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 if args.uri:
     is_server = False
@@ -15,7 +19,7 @@ if args.uri:
         reconnect = create_socket
     else:
         logging.error("Unknown URI protocol: %s (must be one of tcp or http)" %
-              args.server)
+                      args.server)
         exit(1)
 else:
     is_server = True
@@ -28,7 +32,7 @@ else:
         reconnect = create_socket
     else:
         logging.error("Unknown URI protocol: %s (must be one of tcp or http)" %
-              args.server)
+                      args.server)
         exit(1)
 
 
