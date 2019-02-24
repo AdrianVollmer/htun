@@ -44,8 +44,8 @@ class TunnelServer(object):
             self.to_tun = self.to_sock = b''
 
     def time_to_flush(self):
-        if (len(self.to_sock) > self.threshold or
-                time.time()-self.last_flush_time > self.timeout):
+        if ((len(self.to_sock) > self.threshold) or
+                ((time.time()-self.last_flush_time) > self.timeout)):
             self.loop_times.append(time.time() - self.last_flush_time)
             self.last_flush_time = time.time()
             print(len(self.to_sock), time.time()-self.last_flush_time)
