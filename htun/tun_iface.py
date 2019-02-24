@@ -22,6 +22,10 @@ class TunnelServer(object):
         self._tun.netmask = args.tmask
         self._tun.mtu = args.tmtu
         self._tun.up()
+        self.threshold = 5*self._tun.mtu
+        self.loop_times = []
+        self.last_flush_time = time.time()
+        self.timeout = 1.8
         if args.rsubnet and args.uri:
             add_route(args.rsubnet, args.saddr, self._tun.name)
         self._sock = sock
@@ -38,6 +42,18 @@ class TunnelServer(object):
             self.r = [self._tun, self._sock]
             self.w = []
             self.to_tun = self.to_sock = b''
+
+    def time_to_flush(self):
+        loop_times = self.loop_times[:-10]
+        avg_loop_time = 2*self.timeout
+        if loop_times:
+            avg_loop_time = sum(loop_times)/len(loop_times)
+        if (len(self.to_sock) > self.threshold or
+                self.last_flush_time > self.timeout):
+            self.loop_times.append(time.time() - self.last_flush_time)
+            self.last_flush_time = time.time()
+            return True
+        return False
 
     def read_data_from_tun(self):
         if self._tun in self.r:
@@ -73,7 +89,8 @@ class TunnelServer(object):
                     raise e
 
     def write_data_to_socket(self):
-        if self._sock in self.w and self.to_sock:
+        if ((self._sock in self.w and self.to_sock) and
+                self.time_to_flush()):
             sent_len = self._sock.send(self.to_sock)
             self.count_out += sent_len
             dump("to_sock >>>", self.to_sock)
@@ -115,16 +132,16 @@ class TunnelServer(object):
         last_print_time = time.time()
         while is_running():
             try:
+                now = time.time()
                 if not self.forward_data():
                     self.reconnect()
                 else:
-                    print_time = time.time()
                     # only print every 1s for efficiency
-                    if print_time - last_print_time > 1:
+                    if now - last_print_time > 1:
                         print_stats(self.count_in,
                                     self.count_out,
                                     self.count_err)
-                        last_print_time = print_time
+                        last_print_time = now
             except (select.error, socket.error, pytun.Error) as e:
                 logging.warning(str(e))
                 time.sleep(1)
