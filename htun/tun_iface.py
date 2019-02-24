@@ -25,7 +25,7 @@ class TunnelServer(object):
         self.threshold = 5*self._tun.mtu
         self.loop_times = []
         self.last_flush_time = time.time()
-        self.timeout = 1
+        self.timeout = .5
         if args.rsubnet and args.uri:
             add_route(args.rsubnet, args.saddr, self._tun.name)
         self._sock = sock
@@ -47,7 +47,7 @@ class TunnelServer(object):
         if ((len(self.to_sock) > self.threshold) or
                 ((time.time()-self.last_flush_time) > self.timeout)):
             print(len(self.to_sock), time.time()-self.last_flush_time)
-            self.loop_times.append(time.time() - self.last_flush_time)
+            #  self.loop_times.append(time.time() - self.last_flush_time)
             self.last_flush_time = time.time()
             return True
         return False
