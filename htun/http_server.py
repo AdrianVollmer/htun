@@ -39,14 +39,17 @@ def data_response():
 
 
 class S(BaseHTTPRequestHandler):
-    def _set_headers(self):
+    protocol_version = 'HTTP/1.1'
+
+    def _set_headers(self, content_length):
         self.send_response(200)
+        self.send_header('Content-Length', content_length)
         self.end_headers()
 
     def do_GET(self):
         data_out = data_response()
 
-        self._set_headers()
+        self._set_headers(len(data_out))
         self.wfile.write(data_out)
 
     def do_POST(self):
@@ -59,7 +62,7 @@ class S(BaseHTTPRequestHandler):
             w[0].send(data)
         data_out = data_response()
 
-        self._set_headers()
+        self._set_headers(len(data_out))
         self.wfile.write(data_out)
 
     def log_message(self, format, *kwargs):
