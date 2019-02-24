@@ -54,6 +54,7 @@ class TunnelServer(object):
             else:
                 logging.info("Connection closed")
                 return False
+        return True
 
     def write_data_to_tun(self):
         if self._tun in self.w and self.to_tun:
@@ -84,6 +85,7 @@ class TunnelServer(object):
         except ValueError:
             logging.info("Connection reset by peer")
             return False
+        return True
 
     def prepare_fds(self):
         self.r = [self._tun, self._sock]
@@ -94,17 +96,19 @@ class TunnelServer(object):
             self.w.append(self._tun)
         if self.to_sock:
             self.w.append(self._sock)
-        return True
 
     def forward_data(self):
-        self.select_fds()
+        if not self.select_fds():
+            return False
 
-        self.read_data_from_socket()
+        if not self.read_data_from_socket():
+            return False
         self.read_data_from_tun()
         self.write_data_to_tun()
         self.write_data_to_socket()
 
         self.prepare_fds()
+        return True
 
     def run(self):
         self.count_in = self.count_out = self.count_err = 0
