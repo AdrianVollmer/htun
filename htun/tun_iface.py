@@ -49,7 +49,7 @@ class TunnelServer(object):
         if loop_times:
             avg_loop_time = sum(loop_times)/len(loop_times)
         if (len(self.to_sock) > self.threshold or
-                self.last_flush_time > self.timeout):
+                time.time()-self.last_flush_time > self.timeout):
             self.loop_times.append(time.time() - self.last_flush_time)
             self.last_flush_time = time.time()
             return True
