@@ -38,18 +38,13 @@ class TunnelServer(object):
             self.w = []
             self.to_tun = self.to_sock = b''
 
-    def forward_data(self):
-        try:
-            self.r, self.w, _ = select.select(self.r, self.w, [])
-        except ValueError as e:
-            logging.info("Connection reset by peer")
-            return False
-
-
+    def read_data_from_tun(self):
         if self._tun in self.r:
             data = self._tun.read(self._tun.mtu)
             self.to_sock += data
             dump("from_tun <<<", data)
+
+    def read_data_from_socket(self):
         if self._sock in self.r:
             data = self._sock.recv(65535)
             if data:
@@ -59,6 +54,7 @@ class TunnelServer(object):
                 logging.info("Connection closed")
                 return False
 
+    def write_data_to_tun(self):
         if self._tun in self.w and self.to_tun:
             try:
                 write_len = self._tun.write(self.to_tun)
@@ -73,12 +69,22 @@ class TunnelServer(object):
                     self.count_err += 1
                 else:
                     raise e
+
+    def write_data_to_socket(self):
         if self._sock in self.w and self.to_sock:
             sent_len = self._sock.send(self.to_sock)
             self.count_out += sent_len
             dump("to_sock >>>", self.to_sock)
             self.to_sock = b""
 
+    def select_fds(self):
+        try:
+            self.r, self.w, _ = select.select(self.r, self.w, [])
+        except ValueError as e:
+            logging.info("Connection reset by peer")
+            return False
+
+    def prepare_fds(self):
         self.r = [self._tun, self._sock]
         self.w = []
         # only put in the object we really want to write to, or
@@ -88,6 +94,16 @@ class TunnelServer(object):
         if self.to_sock:
             self.w.append(self._sock)
         return True
+
+    def forward_data(self):
+        self.select_fds()
+
+        self.read_data_from_socket()
+        self.read_data_from_tun()
+        self.write_data_to_tun()
+        self.write_data_to_socket()
+
+        self.prepare_fds()
 
     def run(self):
         self.count_in = self.count_out = self.count_err = 0
