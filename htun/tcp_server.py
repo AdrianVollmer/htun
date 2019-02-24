@@ -4,7 +4,7 @@ from htun.args import args
 
 
 def create_socket():
-    logging.info("Waiting for connection... ", end='')
+    logging.info("Waiting for connection... ")
     _sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     _sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     _sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
