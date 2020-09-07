@@ -9,7 +9,7 @@ at all and require you to go through an HTTP proxy. htun enables you to get
 full internet access in those situations (all ports, all protocols). It also
 supports using a SOCKS proxy.
 
-Obviously, performance takes a huge it. So it is meant for some light
+Obviously, performance takes a huge hit. So it is meant for some light
 browsing or downloading small files sporadically. Expect transfer rates to
 be cut by a factor of up to 100.
 
