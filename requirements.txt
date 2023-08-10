@@ -1,5 +1,4 @@
 urllib3==1.26.5
 python_pytun==2.2.1
 hexdump==3.3
-pytun==1.0.1
 SocksiPy_branch==1.01
